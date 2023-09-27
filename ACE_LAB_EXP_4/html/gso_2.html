@@ -1,0 +1,254 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>gso_2</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-09-03"><meta name="DC.source" content="gso_2.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">% Grahm-Schmidt Orthogonalization-2</span>
+<span class="comment">% Name: Sachin Chauhan</span>
+<span class="comment">% Roll# 23SP06007</span>
+<span class="comment">% Course: Advanced Communication Laboratory</span>
+<span class="comment">% ////////////////////////////////////////////////////</span>
+clc;
+clear <span class="string">global</span>;
+close <span class="string">all</span>;
+<span class="comment">% //////////////////////////////////////////////</span>
+
+syms <span class="string">x</span>;
+<span class="comment">%defining time limits</span>
+t_low=0;
+t_high=3;
+<span class="comment">%defining signals</span>
+s1=2*(heaviside(x)-heaviside(x-1));
+s2=4*(-heaviside(x)+heaviside(x-2));
+s3=3*(heaviside(x)-heaviside(x-3));
+phi=[];<span class="comment">%basis fucntion array</span>
+s=[s1,s2,s3];<span class="comment">%signal array</span>
+<span class="comment">%calculating basis function</span>
+<span class="keyword">for</span> i=1:length(s)
+    f_tilda=s(i);
+    <span class="keyword">if</span> i&gt;1
+        <span class="keyword">for</span> j=1:i-1<span class="comment">%calculating f_tilda</span>
+            f_tilda=f_tilda-innerProduct(phi(j),f_tilda,t_low,t_high)*phi(j);
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    <span class="comment">% if(f_tilda~=0)</span>
+        phi=[phi f_tilda/(calc_norm(f_tilda,t_low,t_high))];<span class="comment">%calulating phi(t) for the ith signal and appending it to the phi array</span>
+    <span class="comment">% end</span>
+<span class="keyword">end</span>
+
+<span class="comment">%storing coefficients in an array for plotting the constellation diagram</span>
+<span class="keyword">for</span> i=1:length(s)
+    <span class="keyword">for</span> j=1:length(phi)
+       <span class="keyword">if</span>(isnan(phi(j))==0)
+            points(i,j)=innerProduct(phi(j),s(i),t_low,t_high);
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">%plotting signals</span>
+figure(1);
+<span class="keyword">for</span> i=1:length(s)
+    subplot(2,2,i);
+    fplot(s(i),<span class="string">'r'</span>);
+    xlim([-5 5]);
+    ylim([-5 5]);
+    grid <span class="string">on</span>;
+    xlabel(<span class="string">'Time'</span>);
+    ylabel(<span class="string">'Amplitude'</span>);
+    title(sprintf(<span class="string">'s%d(t)'</span>,i));
+
+<span class="keyword">end</span>
+<span class="comment">%plotting the basis functions</span>
+figure(2);
+<span class="keyword">for</span> i=1:length(phi)
+    hold <span class="string">on</span>;
+    subplot(2,2,i);
+    <span class="comment">% fplot(f_tilda_arr(i));</span>
+    fplot(phi(i),<span class="string">'r'</span>);
+    grid <span class="string">on</span>;
+    xlim([-5 5]);
+    ylim([-5 5]);
+    xlabel(<span class="string">'Time(sec)'</span>);
+    ylabel(<span class="string">'Amplitude'</span>);
+    title(sprintf(<span class="string">'Phi-%d'</span>,i));
+<span class="keyword">end</span>
+<span class="comment">%plotting the constellation diagram</span>
+[row col]=size(points);
+x=points(:,1);
+y=points(:,2);
+z=points(:,3);
+figure(3);
+scatter3(x,y,z,<span class="string">'r'</span>,<span class="string">'filled'</span>);
+xlabel(<span class="string">'Phi1'</span>);
+ylabel(<span class="string">'Phi2'</span>);
+zlabel(<span class="string">'Phi3'</span>);
+title(<span class="string">'Constellation Plot'</span>);
+grid <span class="string">on</span>;
+
+<span class="comment">%user defined function for calculating norm</span>
+<span class="keyword">function</span> norm=calc_norm(s,t_low,t_high)
+    norm=sqrt(int(s*s,t_low,t_high));
+<span class="keyword">end</span>
+<span class="comment">%user defined function for calculating innerproduct of two signals</span>
+<span class="keyword">function</span> inner_prod=innerProduct(f1,f2,t_low,t_high)
+    inner_prod=int(f1*f2,t_low,t_high);
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="gso_2_01.png" alt=""> <img vspace="5" hspace="5" src="gso_2_02.png" alt=""> <img vspace="5" hspace="5" src="gso_2_03.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+% Grahm-Schmidt Orthogonalization-2
+% Name: Sachin Chauhan
+% Roll# 23SP06007
+% Course: Advanced Communication Laboratory
+% ////////////////////////////////////////////////////
+clc;
+clear global;
+close all; 
+% //////////////////////////////////////////////
+
+syms x;
+%defining time limits
+t_low=0;
+t_high=3;
+%defining signals
+s1=2*(heaviside(x)-heaviside(x-1));
+s2=4*(-heaviside(x)+heaviside(x-2));
+s3=3*(heaviside(x)-heaviside(x-3));
+phi=[];%basis fucntion array
+s=[s1,s2,s3];%signal array
+%calculating basis function
+for i=1:length(s)
+    f_tilda=s(i);
+    if i>1
+        for j=1:i-1%calculating f_tilda
+            f_tilda=f_tilda-innerProduct(phi(j),f_tilda,t_low,t_high)*phi(j);
+        end
+    end
+    % if(f_tilda~=0)
+        phi=[phi f_tilda/(calc_norm(f_tilda,t_low,t_high))];%calulating phi(t) for the ith signal and appending it to the phi array
+    % end
+end
+
+%storing coefficients in an array for plotting the constellation diagram
+for i=1:length(s)
+    for j=1:length(phi)
+       if(isnan(phi(j))==0)
+            points(i,j)=innerProduct(phi(j),s(i),t_low,t_high); 
+        end 
+    end
+end
+
+%plotting signals
+figure(1);
+for i=1:length(s)
+    subplot(2,2,i);
+    fplot(s(i),'r');
+    xlim([-5 5]);
+    ylim([-5 5]);
+    grid on;
+    xlabel('Time');
+    ylabel('Amplitude');
+    title(sprintf('s%d(t)',i));
+
+end
+%plotting the basis functions
+figure(2);
+for i=1:length(phi)
+    hold on;
+    subplot(2,2,i);
+    % fplot(f_tilda_arr(i));
+    fplot(phi(i),'r');
+    grid on;
+    xlim([-5 5]);
+    ylim([-5 5]);
+    xlabel('Time(sec)');
+    ylabel('Amplitude');
+    title(sprintf('Phi-%d',i));
+end
+%plotting the constellation diagram
+[row col]=size(points);
+x=points(:,1);
+y=points(:,2);
+z=points(:,3);
+figure(3);
+scatter3(x,y,z,'r','filled');
+xlabel('Phi1');
+ylabel('Phi2');
+zlabel('Phi3');
+title('Constellation Plot');
+grid on;
+
+%user defined function for calculating norm
+function norm=calc_norm(s,t_low,t_high)
+    norm=sqrt(int(s*s,t_low,t_high));
+end
+%user defined function for calculating innerproduct of two signals
+function inner_prod=innerProduct(f1,f2,t_low,t_high)
+    inner_prod=int(f1*f2,t_low,t_high);
+end
+
+##### SOURCE END #####
+--></body></html>
